@@ -34,10 +34,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.aistra.hail.HailApp.Companion.app
 import com.aistra.hail.R
-import com.aistra.hail.app.AppManager
+//import com.aistra.hail.app.AppManager
 import com.aistra.hail.app.HailApi
 import com.aistra.hail.app.HailData
-import com.aistra.hail.databinding.DialogInputBinding
+//import com.aistra.hail.databinding.DialogInputBinding
 import com.aistra.hail.ui.main.MainActivity
 import com.aistra.hail.ui.main.MainFragment
 import com.aistra.hail.ui.theme.AppTheme
@@ -46,13 +46,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textview.MaterialTextView
 import com.rosan.dhizuku.api.Dhizuku
 import com.rosan.dhizuku.api.DhizukuRequestPermissionListener
-import kotlinx.coroutines.Dispatchers
+//import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+//import kotlinx.coroutines.withContext
 import me.zhanghai.compose.preference.*
 import rikka.shizuku.Shizuku
 
@@ -531,25 +531,25 @@ class SettingsFragment : MainFragment(), MenuProvider {
         return true
     }
 
-    private suspend fun onTerminalResult(exitValue: Int, msg: String?) = withContext(Dispatchers.Main) {
-        if (exitValue == 0 && msg.isNullOrBlank()) return@withContext
-        MaterialAlertDialogBuilder(requireActivity()).apply {
-            if (!msg.isNullOrBlank()) {
-                if (exitValue != 0) {
-                    setTitle(getString(R.string.operation_failed, exitValue.toString()))
-                }
-                setMessage(msg)
-                setNeutralButton(android.R.string.copy) { _, _ -> HUI.copyText(msg) }
-            } else if (exitValue != 0) {
-                setMessage(getString(R.string.operation_failed, exitValue.toString()))
-            }
-        }.setPositiveButton(android.R.string.ok, null).show().findViewById<MaterialTextView>(android.R.id.message)
-            ?.setTextIsSelectable(true)
-    }
+//    private suspend fun onTerminalResult(exitValue: Int, msg: String?) = withContext(Dispatchers.Main) {
+//        if (exitValue == 0 && msg.isNullOrBlank()) return@withContext
+//        MaterialAlertDialogBuilder(requireActivity()).apply {
+//            if (!msg.isNullOrBlank()) {
+//                if (exitValue != 0) {
+//                    setTitle(getString(R.string.operation_failed, exitValue.toString()))
+//                }
+//                setMessage(msg)
+//                setNeutralButton(android.R.string.copy) { _, _ -> HUI.copyText(msg) }
+//            } else if (exitValue != 0) {
+//                setMessage(getString(R.string.operation_failed, exitValue.toString()))
+//            }
+//        }.setPositiveButton(android.R.string.ok, null).show().findViewById<MaterialTextView>(android.R.id.message)
+//            ?.setTextIsSelectable(true)
+//    }
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_terminal -> showTerminalDialog()
+//            R.id.action_terminal -> showTerminalDialog()
             R.id.action_remove_owner -> (requireActivity() as MainActivity).ownerRemoveDialog()
             R.id.action_help -> HUI.openLink(HailData.URL_README)
         }
@@ -562,26 +562,27 @@ class SettingsFragment : MainFragment(), MenuProvider {
 
     override fun onPrepareMenu(menu: Menu) {
         super.onPrepareMenu(menu)
-        if (HailData.workingMode.startsWith(HailData.SU) || HailData.workingMode.startsWith(
-                HailData.SHIZUKU
-            )
-        ) menu.findItem(R.id.action_terminal).isVisible = true
-        else if (HPolicy.isDeviceOwnerActive) menu.findItem(R.id.action_remove_owner).isVisible = true
+//        if (HailData.workingMode.startsWith(HailData.SU) || HailData.workingMode.startsWith(
+//                HailData.SHIZUKU
+//            )
+//        ) menu.findItem(R.id.action_terminal).isVisible = true
+//        else
+            if (HPolicy.isDeviceOwnerActive) menu.findItem(R.id.action_remove_owner).isVisible = true
     }
 
-    private fun showTerminalDialog() {
-        val binding = DialogInputBinding.inflate(layoutInflater)
-        binding.inputLayout.setHint(R.string.command)
-        binding.editText.run {
-            setSingleLine()
-            filters = arrayOf()
-        }
-        MaterialAlertDialogBuilder(requireActivity()).setTitle(R.string.action_terminal).setView(binding.root)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                lifecycleScope.launch {
-                    val result = AppManager.execute(binding.editText.text.toString())
-                    onTerminalResult(result.first, result.second)
-                }
-            }.setNegativeButton(android.R.string.cancel, null).show()
-    }
+//    private fun showTerminalDialog() {
+//        val binding = DialogInputBinding.inflate(layoutInflater)
+//        binding.inputLayout.setHint(R.string.command)
+//        binding.editText.run {
+//            setSingleLine()
+//            filters = arrayOf()
+//        }
+//        MaterialAlertDialogBuilder(requireActivity()).setTitle(R.string.action_terminal).setView(binding.root)
+//            .setPositiveButton(android.R.string.ok) { _, _ ->
+//                lifecycleScope.launch {
+//                    val result = AppManager.execute(binding.editText.text.toString())
+//                    onTerminalResult(result.first, result.second)
+//                }
+//            }.setNegativeButton(android.R.string.cancel, null).show()
+//    }
 }
